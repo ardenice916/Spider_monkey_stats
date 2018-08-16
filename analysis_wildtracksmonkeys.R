@@ -1,53 +1,56 @@
-#COMPLETE ANALYSIS OF 2016 WILDTRACKS DATA, FEBRUARY 2018##############################
+#COMPLETE ANALYSIS OF 2016 WILDTRACKS DATA, FEBRUARY 2018
 
-#Github
+#set working directory
 
-##############set working directory####################################################
+setwd("~/Spider_monkey_stats")
 
-setwd("~/Wildtracks - Spider Monkeys/Publication Work/Re-Analysis")
-
-##############load packages############################################################
+#load useful packages
 
 library(dplyr)
 library(igraph)
 library(ggplot2)
 library(readxl)
 library(readr)
+library(nortest)
 
-##############import###################################################################
+#import
 
-focals <- read_excel("~/Wildtracks - Spider Monkeys/Publication Work/Re-Analysis/focals_R.xlsx", 
-                       col_types = c("skip", "text", "date", 
-                                     "date", "skip", "skip", "text", 
-                                     "text", "text", "numeric", "numeric", 
-                                     "text", "text", "text", "skip"))
-#change $time to proper format
-
-focals$time<-format(focals$time, "%H:%M:%S")
+focals <- read_csv("focals_Wildtracks.csv", 
+                              col_types = cols(condition = col_skip(), 
+                                               date = col_date(format = "%m/%d/%Y"), 
+                                               duration_sec = col_number(), enclosure_access = col_skip(), 
+                                               location = col_factor(levels = c("satellite", 
+                                                                                "center")), n_encl = col_factor(levels = c("1", 
+                                                                                                                           "2")), observer_id = col_character(), 
+                                               occurrences = col_integer(), record = col_skip(), 
+                                               time = col_time(format = "%H:%M:%S"), 
+                                               time_meal = col_factor(levels = c("none", 
+                                                                                 "before", "after")), X18 = col_skip(), X19 = col_skip(), 
+                                               X20 = col_skip(), X21 = col_skip()), trim_ws = FALSE)
 
 #view and summarize
 
 View(focals)
 summary(focals)
+str(focals)
 
-##############convert durations to minutes#############################################
+#convert durations to minutes
 
 focals$dur_m <- focals$duration_sec/60
 focals$dur_h <- focals$dur_m/60
 
+sum(focals$duration_sec)
 sum(focals$dur_m)
 sum(focals$dur_h)
+#199.67 focal hours collected
 
-##############create subset table by id################################################
-summary_id1<-focals %>% 
-  group_by(focal_id, behavior) %>%
-  filter(focal_id==actor_id) %>% 
-  summarize(total_dur_m=sum(dur_m), total_dur_h=sum(dur_h),
-            total_dur_cbc=sum(dur_m, focals$condition=="cbc"), 
-            total_dur_sbc=sum(dur_m, focals$condition=="sbc"),
-            total_dur_sat=sum(dur_m, focals$condition=="satellite"),
-            total_dur_cen=sum(dur_m, focals$condition=="center"))
+#create summarized table
 
-View(summary_id1)
+sum_focals<-focals %>%
+  filter(focal_id==actor_id) %>%
+  select(focal_id, time_meal, n_encl, location, activity) %>%
+  group_by(focal_id, time_meal, n_encl, location, activity)
 
-##############convert to rates/rel dur##########################################
+View(sum_focals)
+
+
