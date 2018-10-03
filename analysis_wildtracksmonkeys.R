@@ -35,6 +35,8 @@ library(ggplot2)
 
 #import
 
+focals <- read.table(file="focals_Wildtracks.csv", sep=",", header=T)#alternate import code
+
 focals <- read_csv("focals_Wildtracks.csv", 
                               col_types = cols(condition = col_skip(), 
                                                date = col_date(format = "%m/%d/%Y"), 
