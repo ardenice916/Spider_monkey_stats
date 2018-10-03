@@ -4,6 +4,20 @@
 
 setwd("~/Spider_monkey_stats")
 
+#install packages
+install.packages("readxl")
+install.packages("readr")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("nortest")
+install.packages("lattice")
+install.packages("nlme")
+install.packages("lme4")
+install.packages("lmerTest")
+install.packages("multcomp")
+install.packages("igraph")
+install.packages("ggplots")
+
 #load useful packages
 
 library(readxl)
