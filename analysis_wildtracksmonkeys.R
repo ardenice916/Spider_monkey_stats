@@ -16,7 +16,7 @@ install.packages("lme4")
 install.packages("lmerTest")
 install.packages("multcomp")
 install.packages("igraph")
-install.packages("ggplots")
+install.packages("ggplot2")
 
 #load useful packages
 
@@ -63,7 +63,8 @@ focals <- read_csv("focals_Wildtracks.csv",
 
 View(focals)
 summary(focals)
-str(focals)
+str(focals$actor_id)
+str(focals$focal_id)
 
 #convert durations to minutes
 
@@ -77,8 +78,14 @@ sum(focals$dur_h)
 
 #create summarized table
 
-sum_focals<-focals %>%
-  filter(focal_id==actor_id) %>%
+sum_focals1<-focals %>%
+  dplyr::filter(actor_id!="FG") %>% 
+  dplyr::filter(actor_id!="HUMAN")
+  
+sum_focals1$actor_id<-factor(sum_focals1$actor_id, levels=c("CL","DU","FY","MA","ME","PA","PE","PO","PP","RK","TR"))
+  
+sum_focals<-sum_focals1 %>%
+  dplyr::filter(actor_id==focal_id) %>%
   dplyr::select(duration_sec, occurrences, month, focal_id, time_meal, n_encl, location, activity, focal_sex, focal_group, focal_age) %>%
   group_by(focal_id, focal_sex, focal_group, focal_age, month, time_meal, n_encl, location, activity) %>%
   complete(focal_id, activity, fill = list(duration_sec = 0)) %>%
