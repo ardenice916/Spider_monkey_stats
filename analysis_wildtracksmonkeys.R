@@ -101,5 +101,19 @@ View(sum_focals)
 sum_abnormal<-sum_focals %>%
   filter(activity=="abnormal")
 
-M0_abnormal<-gls(prop_time ~ n_encl*location + focal_id + time_meal + month, data=sum_abnormal, method="ML")
+M0_abnormal<-gls(prop_time ~ n_encl + location + time_meal + focal_sex + focal_age, 
+                 na.action=na.omit, data=sum_abnormal, method="ML")
 
+#add random factor
+
+M1_abnormal<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                 random = ~1|focal_group, na.action=na.omit, data=sum_abnormal, method="ML")
+
+#add nesting
+sum_focals$nest <- with(sum_focals, factor(paste(focal_group,focal_id)))
+
+M2_abnormal<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                 random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+#anova
+anova(M0_abnormal, M1_abnormal, M2_abnormal)
