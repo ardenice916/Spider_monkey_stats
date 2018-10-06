@@ -33,31 +33,9 @@ library(multcomp)
 library(igraph)
 library(ggplot2)
 
-#import
+#import code
 
 focals <- read.table(file="focals_Wildtracks.csv", sep=",", header=T)#alternate import code
-
-focals <- read_csv("focals_Wildtracks.csv", 
-                              col_types = cols(condition = col_skip(), 
-                                               date = col_date(format = "%m/%d/%Y"), 
-                                               month = col_factor(levels = c("jun-jul", "jul-aug", "aug-sep")), 
-                                               activity = col_factor(levels = c("abnormal","agonistic","caregiver",
-                                                                                "forage","inactive","movement","not_visible",
-                                                                                "other","parental","prosocial","self_directed",
-                                                                                "sociosexual","solitary_play","vocalization")),
-                                               duration_sec = col_number(), enclosure_access = col_skip(), 
-                                               location = col_factor(levels = c("satellite", 
-                                                                                "center")), 
-                                               n_encl = col_factor(levels = c("1","2")), 
-                                               observer_id = col_character(), 
-                                               occurrences = col_integer(), record = col_skip(), 
-                                               time = col_time(format = "%H:%M:%S"), 
-                                               focal_sex = col_factor(levels = c("male","female")),
-                                               focal_group = col_factor(levels = c("sat1","sat2","sat3")),
-                                               focal_age = col_factor(levels = c("subadult","adult")),
-                                               time_meal = col_factor(levels = c("none", 
-                                                                                 "before", "after")), 
-                                               trim_ws = FALSE))
 
 #view and summarize
 
@@ -93,6 +71,8 @@ sum_focals<-sum_focals1 %>%
   summarize(sum_dur=sum(duration_sec)) %>%
   mutate(prop_time=sum_dur/sum(sum_dur))
 
+sum_focals$nest <- with(sum_focals, factor(paste(focal_group,focal_id)))
+
 View(sum_focals)
 
 #Look at mixed effects model
@@ -109,11 +89,44 @@ M0_abnormal<-gls(prop_time ~ n_encl + location + time_meal + focal_sex + focal_a
 M1_abnormal<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
                  random = ~1|focal_group, na.action=na.omit, data=sum_abnormal, method="ML")
 
+
 #add nesting
-sum_focals$nest <- with(sum_focals, factor(paste(focal_group,focal_id)))
 
 M2_abnormal<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
                  random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
 
 #anova
-anova(M0_abnormal, M1_abnormal, M2_abnormal)
+anova(M0_abnormal, M1_abnormal, M2_abnormal, M3_abnormal)
+
+#M1 is lowest AIC
+
+#Analyze base model residuals
+
+E1<-residuals(M1_abnormal)
+
+plot(sum_abnormal %>% dplyr::select(focal_group), E1, xlab="Focal Group", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(n_encl),
+     E1, xlab="# Enclosures", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(location),
+     E1, xlab="Location", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(month),
+     E1, xlab="Month", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(time_meal),
+     E1, xlab="Meal Status", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(focal_sex),
+     E1, xlab="Focal Sex", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(focal_age),
+     E1, xlab="Focal Age", ylab="Residuals")
+
+qqnorm(residuals(M1))
+qqline(residuals(M1))
+ad.test(residuals(M1))
+
+plot(M1) 
+
+#
+
+x<-tf$col.volume.mm[!is.na(tf$col.volume.mm)]#removes na values from column
+E2<-residuals(M2,type="normalized")
+plot(x, E2)
+#residuals are linear
