@@ -122,6 +122,86 @@ ad.test(E2)
 
 plot(M2_abnormal) 
 
-#
 plot(sum_abnormal$prop_time, E2)
-#residuals are linear
+
+#log normalize proportions
+sum_abnormal$l.prop_time=log(sum_abnormal$prop_time+1)
+
+#repeat model attempts with normalized data
+
+M0_abnormal<-gls(l.prop_time ~ n_encl + location + time_meal + focal_sex + focal_age, 
+                 na.action=na.omit, data=sum_abnormal, method="ML")
+
+M1_abnormal<-lme(l.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                 random = ~1|focal_group, na.action=na.omit, data=sum_abnormal, method="ML")
+
+M2_abnormal<-lme(l.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                 random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+anova(M0_abnormal, M1_abnormal, M2_abnormal)
+anova(M0_abnormal, M2_abnormal)
+
+E2<-residuals(M2_abnormal)
+str(E2)
+E2
+summary(E2)
+
+plot(sum_abnormal$n_encl, E2, xlab="# Enclosures", ylab="Residuals")
+plot(sum_abnormal$location, E2, xlab="Location", ylab="Residuals")
+plot(sum_abnormal$month, E2, xlab="Month", ylab="Residuals")
+plot(sum_abnormal$time_meal, E2, xlab="Meal Status", ylab="Residuals")
+plot(sum_abnormal$focal_sex, E2, xlab="Focal Sex", ylab="Residuals")
+plot(sum_abnormal$focal_age, E2, xlab="Focal Age", ylab="Residuals")
+
+qqnorm(E2)
+qqline(E2)
+ad.test(E2)
+
+plot(M2_abnormal) 
+
+plot(sum_abnormal$l.prop_time, E2)
+
+#arcsine transformation
+asinTransform <- function(p) { asin(sqrt(p)) }
+
+#execute arcsine transformation
+sum_abnormal$as.prop_time=asinTransform(sum_abnormal$prop_time)
+
+#repeat model attempts with arcsine normalized data
+
+M0_abnormal<-gls(as.prop_time ~ n_encl + location + time_meal + focal_sex + focal_age, 
+                 na.action=na.omit, data=sum_abnormal, method="ML")
+
+M1_abnormal<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                 random = ~1|focal_group, na.action=na.omit, data=sum_abnormal, method="ML")
+
+M2_abnormal<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                 random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+anova(M0_abnormal, M1_abnormal, M2_abnormal)
+anova(M0_abnormal, M2_abnormal)
+
+E2<-residuals(M2_abnormal)
+str(E2)
+E2
+summary(E2)
+
+plot(sum_abnormal$n_encl, E2, xlab="# Enclosures", ylab="Residuals")
+plot(sum_abnormal$location, E2, xlab="Location", ylab="Residuals")
+plot(sum_abnormal$month, E2, xlab="Month", ylab="Residuals")
+plot(sum_abnormal$time_meal, E2, xlab="Meal Status", ylab="Residuals")
+plot(sum_abnormal$focal_sex, E2, xlab="Focal Sex", ylab="Residuals")
+plot(sum_abnormal$focal_age, E2, xlab="Focal Age", ylab="Residuals")
+
+qqnorm(E2)
+qqline(E2)
+ad.test(E2)
+
+plot(M2_abnormal) 
+
+plot(sum_abnormal$as.prop_time, E2)
+
+#check for autocorrelation
+acf(E2, na.action=na.pass,
+    main="Auto-correlation plot for residuals")
+#little autocorrelation in the first lag
