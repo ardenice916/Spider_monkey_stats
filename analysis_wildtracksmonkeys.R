@@ -36,6 +36,7 @@ library(ggplot2)
 #import code
 
 focals <- read.table(file="focals_Wildtracks.csv", sep=",", header=T)#alternate import code
+focals$n_encl<-factor(focals$n_encl, levels=c("1","2"))
 
 #view and summarize
 
