@@ -104,36 +104,23 @@ anova(M0_abnormal, M2_abnormal)
 #Analyze base model residuals
 
 E2<-residuals(M2_abnormal)
+str(E2)
+E2
+summary(E2)
 
-plot(sum_abnormal %>% dplyr::select(focal_group), E2, xlab="Focal Group", ylab="Residuals")
+plot(sum_abnormal$n_encl, E2, xlab="# Enclosures", ylab="Residuals")
+plot(sum_abnormal$location, E2, xlab="Location", ylab="Residuals")
+plot(sum_abnormal$month, E2, xlab="Month", ylab="Residuals")
+plot(sum_abnormal$time_meal, E2, xlab="Meal Status", ylab="Residuals")
+plot(sum_abnormal$focal_sex, E2, xlab="Focal Sex", ylab="Residuals")
+plot(sum_abnormal$focal_age, E2, xlab="Focal Age", ylab="Residuals")
 
-plot(sum_abnormal %>% dplyr::select(n_encl),
-     E1, xlab="# Enclosures", ylab="Residuals")
+qqnorm(E2)
+qqline(E2)
+ad.test(E2)
 
-plot(sum_abnormal %>% dplyr::select(location),
-     E1, xlab="Location", ylab="Residuals")
-
-plot(sum_abnormal %>% dplyr::select(month),
-     E1, xlab="Month", ylab="Residuals")
-
-plot(sum_abnormal %>% dplyr::select(time_meal),
-     E1, xlab="Meal Status", ylab="Residuals")
-
-plot(sum_abnormal %>% dplyr::select(focal_sex),
-     E1, xlab="Focal Sex", ylab="Residuals")
-
-plot(sum_abnormal %>% dplyr::select(focal_age),
-     E1, xlab="Focal Age", ylab="Residuals")
-
-qqnorm(residuals(M1))
-qqline(residuals(M1))
-ad.test(residuals(M1))
-
-plot(M1) 
+plot(M2_abnormal) 
 
 #
-
-x<-tf$col.volume.mm[!is.na(tf$col.volume.mm)]#removes na values from column
-E2<-residuals(M2,type="normalized")
-plot(x, E2)
+plot(sum_abnormal$prop_time, E2)
 #residuals are linear
