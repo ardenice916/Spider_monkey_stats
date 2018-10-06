@@ -96,25 +96,32 @@ M2_abnormal<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex +
                  random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
 
 #anova
-anova(M0_abnormal, M1_abnormal, M2_abnormal, M3_abnormal)
+anova(M0_abnormal, M1_abnormal, M2_abnormal)
+anova(M0_abnormal, M2_abnormal)
 
-#M1 is lowest AIC
+#M2 is lowest AIC
 
 #Analyze base model residuals
 
-E1<-residuals(M1_abnormal)
+E2<-residuals(M2_abnormal)
 
-plot(sum_abnormal %>% dplyr::select(focal_group), E1, xlab="Focal Group", ylab="Residuals")
+plot(sum_abnormal %>% dplyr::select(focal_group), E2, xlab="Focal Group", ylab="Residuals")
+
 plot(sum_abnormal %>% dplyr::select(n_encl),
      E1, xlab="# Enclosures", ylab="Residuals")
+
 plot(sum_abnormal %>% dplyr::select(location),
      E1, xlab="Location", ylab="Residuals")
+
 plot(sum_abnormal %>% dplyr::select(month),
      E1, xlab="Month", ylab="Residuals")
+
 plot(sum_abnormal %>% dplyr::select(time_meal),
      E1, xlab="Meal Status", ylab="Residuals")
+
 plot(sum_abnormal %>% dplyr::select(focal_sex),
      E1, xlab="Focal Sex", ylab="Residuals")
+
 plot(sum_abnormal %>% dplyr::select(focal_age),
      E1, xlab="Focal Age", ylab="Residuals")
 
