@@ -192,8 +192,10 @@ plot(M2_inactive)
 plot(sum_inactive$as.prop_time, E2)
 
 #check for autocorrelation
-acf(E0, na.action=na.pass,
+acf(E2, na.action=na.pass,
     main="Auto-correlation plot for residuals")
-#potential autocorrelation in the first lag 0-10?
+#potential autocorrelation in the first lag 
+
+#unclear if transformations helped... M2 looks best regardless
 
 

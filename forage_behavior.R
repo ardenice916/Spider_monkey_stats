@@ -125,7 +125,7 @@ M2_forage<-lme(l.prop_time ~ n_encl + location + month + time_meal + focal_sex +
 anova(M0_forage, M1_forage, M2_forage)
 anova(M0_forage, M2_forage)
 
-#M0 still lowest AIC
+#M0 still lowest AIC, better fit than before
 
 E0<-residuals(M0_forage)
 str(E0)
@@ -194,5 +194,7 @@ plot(sum_forage$as.prop_time, E0)
 acf(E0, na.action=na.pass,
     main="Auto-correlation plot for residuals")
 #little autocorrelation in the first lag
+
+#arcsine looks best... M0 best fitting
 
 

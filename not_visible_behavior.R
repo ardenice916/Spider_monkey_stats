@@ -192,8 +192,10 @@ plot(M0_not_visible)
 plot(sum_not_visible$as.prop_time, E0)
 
 #check for autocorrelation
-acf(E2, na.action=na.pass,
+acf(E0, na.action=na.pass,
     main="Auto-correlation plot for residuals")
-#potential autocorrelation in the first lag 0-10?
+#no autocorrelation
+
+#arcsine transformation helped, but residual boxplots still look uneven
 
 

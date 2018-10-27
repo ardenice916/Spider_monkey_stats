@@ -194,6 +194,9 @@ plot(sum_self_directed$prop_time, E2)
 #check for autocorrelation
 acf(E2, na.action=na.pass,
     main="Auto-correlation plot for residuals")
-#potential autocorrelation in the first lag 0-10?
+#no autocorrelation except 1st lag
+
+#M1 w/ log-transformed data looks slightly better?
+#M2 Q-Q plot looks better w/ arcsine transformation?
 
 
