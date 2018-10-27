@@ -37,23 +37,7 @@ library(ggplot2)
 
 focals <- read.table(file="focals_Wildtracks.csv", sep=",", header=T)#alternate import code
 focals$n_encl<-factor(focals$n_encl, levels=c("1","2"))
-
-#view and summarize
-
-View(focals)
-summary(focals)
-str(focals$actor_id)
-str(focals$focal_id)
-
-#convert durations to minutes
-
-focals$dur_m <- focals$duration_sec/60
-focals$dur_h <- focals$dur_m/60
-
-sum(focals$duration_sec)
-sum(focals$dur_m)
-sum(focals$dur_h)
-#199.67 focal hours collected
+focals$month<-factor(focals$month, levels=c("jun-jul","jul-aug","aug-sep"))
 
 #create summarized table
 
@@ -205,3 +189,5 @@ plot(sum_abnormal$as.prop_time, E2)
 acf(E2, na.action=na.pass,
     main="Auto-correlation plot for residuals")
 #little autocorrelation in the first lag
+
+
