@@ -227,3 +227,35 @@ M.full.c<-lme(as.prop_time ~ location + month + time_meal,
 anova(M.full.b,M.full.c)
 
 summary(M.full.c)
+
+#####################################################
+#Get Full Model Statistics and Make Graph
+#####################################################
+
+#best overall model was arcsine transformed
+M.full<-lme(as.prop_time ~ location + month + time_meal, 
+              random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="REML")
+     #need to change method to REML or drop the method term since it defaults to REML
+
+anova(M.full)#this is the summary of your full model
+
+#post hoc tests
+model.matrix.gls <- function(M.full, ...){
+  model.matrix(terms(M.full), data = getData(M.full), ...)  
+}
+model.frame.gls <- function(M.full, ...){
+  model.frame(formula(M.full), data = getData(M.full), ...)  
+}
+terms.gls <- function(M.full, ...){
+  terms(model.frame(M.full),...)  
+}
+
+multCompTukey <- glht(M.full, linfct = mcp(location = "Tukey")) 
+summary(multCompTukey)
+
+multCompTukey <- glht(M.full, linfct = mcp(month = "Tukey")) 
+summary(multCompTukey)
+
+multCompTukey <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
+summary(multCompTukey)
+
