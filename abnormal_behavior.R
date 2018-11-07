@@ -109,6 +109,7 @@ plot(M2_abnormal)
 plot(sum_abnormal$prop_time, E2)
 
 #log normalize proportions
+
 sum_abnormal$l.prop_time=log(sum_abnormal$prop_time+1)
 
 #repeat model attempts with normalized data
@@ -146,9 +147,11 @@ plot(M2_abnormal)
 plot(sum_abnormal$l.prop_time, E2)
 
 #arcsine transformation
+
 asinTransform <- function(p) { asin(sqrt(p)) }
 
 #execute arcsine transformation
+
 sum_abnormal$as.prop_time=asinTransform(sum_abnormal$prop_time)
 
 #repeat model attempts with arcsine normalized data
@@ -186,15 +189,18 @@ plot(M2_abnormal)
 plot(sum_abnormal$as.prop_time, E2)
 
 #check for autocorrelation
+
 acf(E2, na.action=na.pass,
     main="Auto-correlation plot for residuals")
 #little autocorrelation in the first lag
 
 #backwards selection to optimize model in Chapter 5 of Zuur
+
 M.full<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
                        random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
 
 summary(M.full)
+
 #can drop focal_age due to high P value
 
 M.full.a<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex, 
