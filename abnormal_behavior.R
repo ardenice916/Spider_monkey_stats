@@ -190,4 +190,17 @@ acf(E2, na.action=na.pass,
     main="Auto-correlation plot for residuals")
 #little autocorrelation in the first lag
 
+#backwards selection to optimize model in Chapter 5 of Zuur
+M.full<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+                       random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+summary(M.full)
+#can drop focal_age due to high P value
+
+M.full.a<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex, 
+            random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+#compare M.full and M.full.a
+anova(M.full,M.full.a)
+
 
