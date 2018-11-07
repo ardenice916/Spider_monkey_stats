@@ -182,8 +182,11 @@ plot(sum_forage$time_meal, E0, xlab="Meal Status", ylab="Residuals")
 plot(sum_forage$focal_sex, E0, xlab="Focal Sex", ylab="Residuals")
 plot(sum_forage$focal_age, E0, xlab="Focal Age", ylab="Residuals")
 
-bartlett.test(E0~sum_forage$month)#you can use this to see if variance differs by category
-                                  #in these residual tests
+#bartlett test compares variance b/w groups of residuals
+#you can use this to see if variance differs by category
+#in these residual tests
+
+bartlett.test(E0~sum_forage$month)
 
 qqnorm(E0)
 qqline(E0)
@@ -193,13 +196,11 @@ plot(M0_forage)
 
 plot(sum_forage$as.prop_time, E0)
 
-#bartlett test compares variance b/w groups of residuals
-
 #check for autocorrelation
 acf(E0, na.action=na.pass,
     main="Auto-correlation plot for residuals")
 #little autocorrelation in the first lag
 
-#arcsine looks best... M0 best fitting
+#arcsine looks best... M0 best fitting technically, but M2 would be acceptable too
 
 
