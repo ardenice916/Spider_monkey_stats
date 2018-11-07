@@ -207,6 +207,23 @@ M.full.a<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex,
             random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
 
 #compare M.full and M.full.a
+
 anova(M.full,M.full.a)
 
+summary(M.full.a)
 
+
+
+M.full.b<-lme(as.prop_time ~ n_encl + location + month + time_meal, 
+              random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+anova(M.full.a,M.full.b)
+
+summary(M.full.b)
+
+M.full.c<-lme(as.prop_time ~ location + month + time_meal, 
+              random = ~1|nest, na.action=na.omit, data=sum_abnormal, method="ML")
+
+anova(M.full.b,M.full.c)
+
+summary(M.full.c)
