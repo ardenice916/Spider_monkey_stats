@@ -193,6 +193,8 @@ plot(M0_forage)
 
 plot(sum_forage$as.prop_time, E0)
 
+#bartlett test compares variance b/w groups of residuals
+
 #check for autocorrelation
 acf(E0, na.action=na.pass,
     main="Auto-correlation plot for residuals")
