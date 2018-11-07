@@ -182,6 +182,9 @@ plot(sum_forage$time_meal, E0, xlab="Meal Status", ylab="Residuals")
 plot(sum_forage$focal_sex, E0, xlab="Focal Sex", ylab="Residuals")
 plot(sum_forage$focal_age, E0, xlab="Focal Age", ylab="Residuals")
 
+bartlett.test(E0~sum_forage$month)#you can use this to see if variance differs by category
+                                  #in these residual tests
+
 qqnorm(E0)
 qqline(E0)
 ad.test(E0)
