@@ -250,12 +250,12 @@ terms.gls <- function(M.full, ...){
   terms(model.frame(M.full),...)  
 }
 
-multCompTukey <- glht(M.full, linfct = mcp(location = "Tukey")) 
-summary(multCompTukey)
+multCompTukey1 <- glht(M.full, linfct = mcp(location = "Tukey")) 
+summary(multCompTukey1)
 
-multCompTukey <- glht(M.full, linfct = mcp(month = "Tukey")) 
-summary(multCompTukey)
+multCompTukey2 <- glht(M.full, linfct = mcp(month = "Tukey")) 
+summary(multCompTukey2)
 
-multCompTukey <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
-summary(multCompTukey)
+multCompTukey3 <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
+summary(multCompTukey3)
 
