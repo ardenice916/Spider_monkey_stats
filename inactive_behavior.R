@@ -198,4 +198,82 @@ acf(E2, na.action=na.pass,
 
 #unclear if transformations helped... M2 looks best regardless
 
+#make M2 the new full model
 
+M2.full<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+             random = ~1|nest, na.action=na.omit, data=sum_inactive, method="ML")
+
+summary(M2.full)
+
+#drop n_encl
+
+M2.full.a<-lme(as.prop_time ~ location + month + time_meal + focal_sex + focal_age, 
+             random = ~1|nest, na.action=na.omit, data=sum_inactive, method="ML")
+
+anova(M2.full,M2.full.a)
+
+#improved insignificantly
+
+summary(M2.full.a)
+
+#drop month
+
+M2.full.b<-lme(as.prop_time ~ location + time_meal + focal_sex + focal_age, 
+               random = ~1|nest, na.action=na.omit, data=sum_inactive, method="ML")
+
+anova(M2.full.a,M2.full.b)
+
+#improved insignificantly
+
+summary(M2.full.b)
+
+#drop focal sex
+
+M2.full.c<-lme(as.prop_time ~ location + time_meal + focal_age, 
+                 random = ~1|nest, na.action=na.omit, data=sum_inactive, method="ML")
+
+anova(M2.full.b,M2.full.c)
+
+#improved insignificantly
+
+summary(M2.full.c)
+
+#drop focal age
+
+M2.full.d<-lme(as.prop_time ~ location + time_meal, 
+                 random = ~1|nest, na.action=na.omit, data=sum_inactive, method="ML")
+
+anova(M2.full.c,M2.full.d)
+
+#got significantly worse! M2.full.c (w/ focal age) is best fit
+
+#best overall model was arcsine transformed
+M.full<-lme(as.prop_time ~ location + time_meal + focal_age, 
+            random = ~1|nest, na.action=na.omit, data=sum_inactive, method="REML")
+#need to change method to REML or drop the method term since it defaults to REML
+
+anova(M.full)#this is the summary of your full model
+
+#####################################################
+#Get Full Model Statistics and Make Graph
+#####################################################
+
+#post hoc tests
+model.matrix.gls <- function(M.full, ...){
+  model.matrix(terms(M.full), data = getData(M.full), ...)  
+}
+model.frame.gls <- function(M.full, ...){
+  model.frame(formula(M.full), data = getData(M.full), ...)  
+}
+terms.gls <- function(M.full, ...){
+  terms(model.frame(M.full),...)  
+}
+
+multCompTukey1 <- glht(M.full, linfct = mcp(location = "Tukey")) 
+summary(multCompTukey1)
+
+multCompTukey2 <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
+summary(multCompTukey2)
+
+multCompTukey3 <- glht(M.full, linfct = mcp(focal_age = "Tukey")) 
+summary(multCompTukey3)

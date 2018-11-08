@@ -197,6 +197,67 @@ acf(E2, na.action=na.pass,
 #no autocorrelation except 1st lag
 
 #M1 w/ log-transformed data looks slightly better?
-#M2 Q-Q plot looks better w/ arcsine transformation?
+#M2 Q-Q plot looks better w/ arcsine transformation!
 
+#make M2 w/ arcsine sqrt transformation the new full model
 
+M2.full<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+             random = ~1|nest, na.action=na.omit, data=sum_self_directed, method="ML")
+summary(M2.full)
+
+#drop location
+
+M2.full.a<-lme(as.prop_time ~ n_encl + month + time_meal + focal_sex + focal_age, 
+               random = ~1|nest, na.action=na.omit, data=sum_self_directed, method="ML")
+
+anova(M2.full,M2.full.a)
+
+#improved insignificantly
+
+summary(M2.full.a)
+
+#drop month
+
+M2.full.b<-lme(as.prop_time ~ n_encl + time_meal + focal_sex + focal_age, 
+               random = ~1|nest, na.action=na.omit, data=sum_self_directed, method="ML")
+
+anova(M2.full.a,M2.full.b)
+
+#improved insignificantly
+
+summary(M2.full.b)
+
+#drop time_meal
+
+M2.full.c<-lme(as.prop_time ~ n_encl + focal_sex + focal_age, 
+               random = ~1|nest, na.action=na.omit, data=sum_self_directed, method="ML")
+
+anova(M2.full.b,M2.full.c)
+
+#improved insignificantly
+
+summary(M2.full.c)
+
+#drop n_encl
+
+M2.full.d<-lme(as.prop_time ~ focal_sex + focal_age, 
+               random = ~1|nest, na.action=na.omit, data=sum_self_directed, method="ML")
+
+anova(M2.full.c,M2.full.d)
+
+#got a little bit better, insignificantly
+
+summary(M2.full.d)
+
+#drop focal sex
+
+M2.full.e<-lme(as.prop_time ~ focal_age, 
+               random = ~1|nest, na.action=na.omit, data=sum_self_directed, method="ML")
+
+anova(M2.full.d,M2.full.e)
+
+#slightly better, insignificant
+
+summary(M2.full.e)
+
+#drop focal age? Is that even possible?

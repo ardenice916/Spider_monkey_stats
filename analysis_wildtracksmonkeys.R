@@ -89,3 +89,11 @@ sum_overall
 
 #drop agonistic, caregiver, other, parental, sociosexual, solitary play, vocalization
 #keep/analyze abnormal, forage, inactive, movement, not_visible, prosocial, self_directed
+
+sum_overall_behavior<-sum_focals1 %>%
+  dplyr::filter(actor_id==focal_id) %>%
+  group_by(behavior) %>%
+  summarize(sum_dur=sum(duration_sec)) %>%
+  mutate(prop_time=sum_dur/sum(sum_dur))
+View(sum_overall_behavior)
+
