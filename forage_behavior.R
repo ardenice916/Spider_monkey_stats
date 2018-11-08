@@ -203,4 +203,69 @@ acf(E0, na.action=na.pass,
 
 #arcsine looks best... M0 best fitting technically, but M2 would be acceptable too
 
+#use M2 as new full model
 
+M.full<-lme(as.prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+            random = ~1|nest, na.action=na.omit, data=sum_forage, method="ML")
+summary(M.full)
+
+#drop month
+
+M.full.a<-lme(as.prop_time ~ n_encl + location + time_meal + focal_sex + focal_age, 
+              random = ~1|nest, na.action=na.omit, data=sum_forage, method="ML")
+anova(M.full,M.full.a)
+
+#much better... 
+
+summary(M.full.a)
+
+#drop n_encl
+
+M.full.b<-lme(as.prop_time ~ location + time_meal + focal_age + focal_sex, 
+              random = ~1|nest, na.action=na.omit, data=sum_forage, method="ML")
+anova(M.full.a,M.full.b)
+
+#somewhat better, not significant
+
+summary(M.full.b)
+
+#drop focal_sex
+
+M.full.c<-lme(as.prop_time ~ location + time_meal + focal_age,
+              random = ~1|nest, na.action=na.omit, data=sum_forage, method="ML")
+anova(M.full.b,M.full.c)
+
+#somewhat better, albeit not significantly
+
+summary(M.full.c)
+
+#best overall model was arcsine transformed
+M.full<-lme(as.prop_time ~ location + time_meal + focal_age,
+            random = ~1|nest, na.action=na.omit, data=sum_forage, method="REML")
+#need to change method to REML or drop the method term since it defaults to REML
+
+anova(M.full)#this is the summary of your full model
+
+#####################################################
+#Get Full Model Statistics and Make Graph
+#####################################################
+
+#post hoc tests
+model.matrix.gls <- function(M.full, ...){
+  model.matrix(terms(M.full), data = getData(M.full), ...)  
+}
+model.frame.gls <- function(M.full, ...){
+  model.frame(formula(M.full), data = getData(M.full), ...)  
+}
+terms.gls <- function(M.full, ...){
+  terms(model.frame(M.full),...)  
+}
+
+multCompTukey1 <- glht(M.full, linfct = mcp(location = "Tukey")) 
+summary(multCompTukey1)
+
+multCompTukey2 <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
+summary(multCompTukey2)
+
+multCompTukey3 <- glht(M.full, linfct = mcp(focal_age = "Tukey")) 
+summary(multCompTukey3)
