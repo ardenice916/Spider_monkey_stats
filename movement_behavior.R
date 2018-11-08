@@ -196,6 +196,6 @@ acf(E2, na.action=na.pass,
     main="Auto-correlation plot for residuals")
 #potential autocorrelation in the first lag or 4, 20?
 
-#residual boxplots look a bit uneven... arcsine transformation seemed to help a bit
+#residual boxplots look a bit uneven... log transformation seemed to help a bit
 
 
