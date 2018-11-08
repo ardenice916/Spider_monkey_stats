@@ -259,3 +259,41 @@ summary(multCompTukey)
 multCompTukey <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
 summary(multCompTukey)
 
+#make a graphic
+
+x <- group_by(sum_abnormal, month) %>% 
+  summarize(time.avg = mean(as.prop_time, na.rm = TRUE), 
+            time.sd=sd(as.prop_time, na.rm = TRUE),  
+            n = sum(!is.na(as.prop_time)), 
+            time.se=time.sd/sqrt(n))
+
+ggplot(data=x, 
+       aes(x=month, y=time.avg)) + 
+  geom_bar(stat="identity", position=position_dodge(), color = "black") + 
+  geom_errorbar(aes(ymin=time.avg, ymax=time.avg+time.se), width=0.2, 
+                position=position_dodge(0.9)) + 
+  #scale_fill_manual(values=c("black","gray","white")) +
+  xlab("Time") +
+  ylab(expression(Abnormal~Behavior~(arcsin~sqrt~proportion))) +
+  #ylim(0,0.085) +
+  #labs(fill="Amendment") +
+  theme_bw() +
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        legend.title=element_text(size=6),
+        legend.key=element_blank(),
+        legend.position=c(0.5,0.95),
+        legend.text=element_text(size=8),
+        legend.background=element_blank(),
+        legend.direction="horizontal",
+        legend.key.size=unit(0.3, "cm"),
+        axis.title.y=element_text(size=8),
+        axis.title.x=element_text(size=8),
+        axis.text.x=element_text(size=8))
+
+ggsave('Figures/abnormal_month.tiff',
+       units="in",
+       width=3.25,
+       height=3.25,
+       dpi=1200,
+       compression="lzw")
