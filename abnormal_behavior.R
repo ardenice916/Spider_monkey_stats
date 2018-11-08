@@ -259,3 +259,4 @@ summary(multCompTukey2)
 multCompTukey3 <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
 summary(multCompTukey3)
 
+
