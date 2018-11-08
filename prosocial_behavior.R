@@ -198,4 +198,6 @@ acf(E2, na.action=na.pass,
 
 #even arcsine transformation doesn't normalize data... plotting residuals vs. model on line 192 looks baaaad
 
+#consider not fitting a model? too many zeros...
+
 

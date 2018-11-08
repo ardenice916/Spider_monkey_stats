@@ -198,4 +198,5 @@ acf(E0, na.action=na.pass,
 
 #arcsine transformation helped, but residual boxplots still look uneven
 
+#too many zeros? very difficult to fit a model.
 
