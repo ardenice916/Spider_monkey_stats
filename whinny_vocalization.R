@@ -277,3 +277,4 @@ plot(M2_whinny)
 
 plot(sum_whinny$rate_hr, E2)
 
+
