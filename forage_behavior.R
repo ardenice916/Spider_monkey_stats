@@ -58,8 +58,6 @@ sum_focals<-sum_focals1 %>%
 
 sum_focals$nest <- with(sum_focals, factor(paste(focal_group,focal_id)))
 
-View(sum_focals)
-
 #Look at mixed effects model
 #start without random factor
 

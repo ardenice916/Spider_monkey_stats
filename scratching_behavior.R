@@ -41,7 +41,6 @@ focals$month<-factor(focals$month, levels=c("jun-jul","jul-aug","aug-sep"))
 
 #view and summarize
 
-View(focals)
 summary(focals)
 str(focals$actor_id)
 str(focals$focal_id)
@@ -75,8 +74,6 @@ sum_focals<-sum_focals1 %>%
 
 sum_focals$nest <- with(sum_focals, factor(paste(focal_group,focal_id)))
 
-View(sum_focals)
-
 #Look at mixed effects model
 #start without random factor
 
@@ -84,7 +81,7 @@ sum_scratch<-sum_focals %>%
   filter(behavior=="sdb_scratching")
 
 M0_scratch<-gls(prop_time ~ n_encl + location + time_meal + focal_sex + focal_age, 
-                      na.action=na.omit, data=sum_self_directed, method="ML")
+                      na.action=na.omit, data=sum_scratch, method="ML")
 
 #add random factor
 
