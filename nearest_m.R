@@ -44,6 +44,9 @@ scans$time_meal<-factor(scans$time_meal, levels=c("none","before","after"))
 scans$observer_id<-factor(scans$observer_id, levels=c("916","1231"))
 scans$nearest_m<-as.numeric(scans$nearest_m)
 
+scans<-scans %>%
+  filter(nearest_m != "NA")
+
 #view and summarize
 
 View(scans)
