@@ -56,6 +56,7 @@ str(scans)
 str(scans$nearest_m)
 summary(scans$nearest_m)
 
+histogram(scans$nearest_m)
 
 M0_nearest_m<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                   (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
