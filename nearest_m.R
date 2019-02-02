@@ -78,7 +78,7 @@ anova(M0_nearest_m, M1_nearest_m)
 
 anova(M0_nearest_m, M1_nearest_m, test = "Chi")
 
-#M0 has lowest AIc
+#M0 and M1 have similar AIc
 
 E0<-residuals(M0_nearest_m, type = "pearson")
 str(E0)
@@ -102,8 +102,6 @@ plot(scans$nearest_m, E0)
 
 # test for overdispersion? quasipoisson does not seem to be an option in lme4 package anymore
 #coding for random factors didn't work unless I used lme4
-#can I use a negative binomial distribution to correct for potential overdispersion instead?
-
 
 overdisp_fun <- function(M0_nearest_m) {
   rdf <- df.residual(M0_nearest_m)
@@ -118,3 +116,14 @@ overdisp_fun(M0_nearest_m)
 
 #no over- or under-dispersion, but the residuals look like they fit terribly... maybe we need to transform?
 
+#use M0_nearest_m
+
+M0_nm<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
+                      (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
+
+summary(M0_nearest_m)
+
+M1_nm<-glmer(nearest_m ~ n_encl + location_focal + focal_sex + focal_age + month +
+               (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
+
+anova(M0_nm, M1_nm)
