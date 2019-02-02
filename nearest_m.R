@@ -71,13 +71,13 @@ M1_nearest_m<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex 
 M2_nearest_m<-lmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                       (1|focal_group/focal_id), na.action=na.omit, data=scans)
 
+scans$l.nearest_m=log(scans$nearest_m+1)
 
-
-M0_nearest_m
-summary(M0_nearest_m)
+M3_nearest_m<-lmer(l.nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
+                     (1|focal_group/focal_id), na.action=na.omit, data=scans)
 
 #anova
-anova(M0_nearest_m, M1_nearest_m, M2_nearest_m)
+anova(M0_nearest_m, M1_nearest_m, M2_nearest_m, M3_nearest_m)
 
 anova(M0_nearest_m, M1_nearest_m, test = "Chi")
 
@@ -126,6 +126,28 @@ ad.test(E2)
 plot(M2_nearest_m) 
 
 plot(scans$nearest_m, E2)
+
+#residuals M3 gaussian
+
+E3<-residuals(M3_nearest_m, type = "pearson")
+str(E3)
+E3
+summary(E3)
+
+plot(scans$n_encl, E3, xlab="# Enclosures", ylab="Residuals")
+plot(scans$location_focal, E3, xlab="Location", ylab="Residuals")
+plot(scans$month, E3, xlab="Month", ylab="Residuals")
+plot(scans$time_meal, E3, xlab="Meal Status", ylab="Residuals")
+plot(scans$focal_sex, E3, xlab="Focal Sex", ylab="Residuals")
+plot(scans$focal_age, E3, xlab="Focal Age", ylab="Residuals")
+
+qqnorm(E3)
+qqline(E3)
+ad.test(E3)
+
+plot(M3_nearest_m) 
+
+plot(scans$nearest_m, E3)
 
 # test for overdispersion? quasipoisson does not seem to be an option in lme4 package anymore
 #coding for random factors didn't work unless I used lme4
