@@ -68,17 +68,22 @@ M1_nearest_m<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex 
                     (1|focal_group), 
                   na.action=na.omit, data=scans, family = poisson)
 
+M2_nearest_m<-lmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
+                      (1|focal_group/focal_id), na.action=na.omit, data=scans)
+
 
 
 M0_nearest_m
 summary(M0_nearest_m)
 
 #anova
-anova(M0_nearest_m, M1_nearest_m)
+anova(M0_nearest_m, M1_nearest_m, M2_nearest_m)
 
 anova(M0_nearest_m, M1_nearest_m, test = "Chi")
 
-#M0 and M1 have similar AIc
+#M0 and M1 have similar AIc, M2 is worse
+
+#M0 poisson residuals
 
 E0<-residuals(M0_nearest_m, type = "pearson")
 str(E0)
@@ -99,6 +104,28 @@ ad.test(E0)
 plot(M0_nearest_m) 
 
 plot(scans$nearest_m, E0)
+
+#residuals M2 gaussian
+
+E2<-residuals(M2_nearest_m, type = "pearson")
+str(E2)
+E2
+summary(E2)
+
+plot(scans$n_encl, E2, xlab="# Enclosures", ylab="Residuals")
+plot(scans$location_focal, E2, xlab="Location", ylab="Residuals")
+plot(scans$month, E2, xlab="Month", ylab="Residuals")
+plot(scans$time_meal, E2, xlab="Meal Status", ylab="Residuals")
+plot(scans$focal_sex, E2, xlab="Focal Sex", ylab="Residuals")
+plot(scans$focal_age, E2, xlab="Focal Age", ylab="Residuals")
+
+qqnorm(E2)
+qqline(E2)
+ad.test(E2)
+
+plot(M2_nearest_m) 
+
+plot(scans$nearest_m, E2)
 
 # test for overdispersion? quasipoisson does not seem to be an option in lme4 package anymore
 #coding for random factors didn't work unless I used lme4
