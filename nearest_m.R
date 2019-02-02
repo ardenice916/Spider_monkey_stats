@@ -37,7 +37,7 @@ library(MASS)
 
 #import code
 
-scans <- read.table(file="scans_Wildtracks.csv", sep=",", header=T)#alternate import code
+scans<-read.table(file="scans_Wildtracks.csv", sep=",", header=T)#alternate import code
 scans$n_encl<-factor(scans$n_encl, levels=c("1","2"))
 scans$month<-factor(scans$month, levels=c("jun_jul","jul_aug","aug_sep"))
 scans$time_meal<-factor(scans$time_meal, levels=c("none","before","after"))
