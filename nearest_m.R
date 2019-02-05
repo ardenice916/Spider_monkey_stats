@@ -172,12 +172,19 @@ overdisp_fun(M0_nearest_m)
 M0_nm<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                       (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
 
-anova(M0_nearest_m)
-
 M1_nm<-glmer(nearest_m ~ n_encl + location_focal + focal_sex + focal_age + month +
                (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
 
-M.full<-M0_nm
+anova(M0_nm, M1_nm)
+
+summary(M1_nm)
+anova(M1_nm)
+
+M.full<-M1_nm
+
+anova(M.full)
+
+#post hoc tests
 
 #post hoc tests
 model.matrix.gls <- function(M.full, ...){
@@ -190,11 +197,39 @@ terms.gls <- function(M.full, ...){
   terms(model.frame(M.full),...)  
 }
 
-multCompTukey1 <- glht(M.full, linfct = mcp(location = "Tukey")) 
+multCompTukey1 <- glht(M.full, linfct = mcp(n_encl = "Tukey")) 
 summary(multCompTukey1)
 
-multCompTukey2 <- glht(M.full, linfct = mcp(month = "Tukey")) 
+multCompTukey2 <- glht(M.full, linfct = mcp(location_focal = "Tukey")) 
 summary(multCompTukey2)
 
-multCompTukey3 <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
-summary(multCompTukey3)
+multCompTukey4 <- glht(M.full, linfct = mcp(focal_sex = "Tukey")) 
+summary(multCompTukey4)
+
+multCompTukey5 <- glht(M.full, linfct = mcp(focal_age = "Tukey")) 
+summary(multCompTukey5)
+
+multCompTukey6 <- glht(M.full, linfct = mcp(month= "Tukey")) 
+summary(multCompTukey6)
+
+boxplot(scans$nearest_m ~ scans$month)
+
+scans_jun_jul <- scans %>%
+  filter(month=="jun_jul")
+summary(scans_jun_jul$nearest_m)
+
+scans_jul_aug <- scans %>%
+  filter(month=="jul_aug")
+summary(scans_jul_aug$nearest_m)
+
+scans_aug_sep <- scans %>%
+  filter(month=="aug_sep")
+summary(scans_aug_sep$nearest_m)
+
+scans_male <- scans %>%
+  filter(focal_sex=="male")
+summary(scans_male$nearest_m)
+
+scans_female <- scans %>%
+  filter(focal_sex=="female")
+summary(scans_female$nearest_m)
