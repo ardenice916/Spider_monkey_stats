@@ -73,8 +73,10 @@ M2_nearest_m<-lmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex +
 
 scans$l.nearest_m=log(scans$nearest_m+1)
 
+histogram(scans$l.nearest_m)
+
 M3_nearest_m<-lmer(l.nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
-                     (1|focal_group/focal_id), na.action=na.omit, data=scans)
+                     (1|focal_group), na.action=na.omit, data=scans)
 
 #anova
 anova(M0_nearest_m, M1_nearest_m, M2_nearest_m, M3_nearest_m)
@@ -170,9 +172,29 @@ overdisp_fun(M0_nearest_m)
 M0_nm<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                       (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
 
-summary(M0_nearest_m)
+anova(M0_nearest_m)
 
 M1_nm<-glmer(nearest_m ~ n_encl + location_focal + focal_sex + focal_age + month +
                (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
 
-anova(M0_nm, M1_nm)
+M.full<-M0_nm
+
+#post hoc tests
+model.matrix.gls <- function(M.full, ...){
+  model.matrix(terms(M.full), data = getData(M.full), ...)  
+}
+model.frame.gls <- function(M.full, ...){
+  model.frame(formula(M.full), data = getData(M.full), ...)  
+}
+terms.gls <- function(M.full, ...){
+  terms(model.frame(M.full),...)  
+}
+
+multCompTukey1 <- glht(M.full, linfct = mcp(location = "Tukey")) 
+summary(multCompTukey1)
+
+multCompTukey2 <- glht(M.full, linfct = mcp(month = "Tukey")) 
+summary(multCompTukey2)
+
+multCompTukey3 <- glht(M.full, linfct = mcp(time_meal = "Tukey")) 
+summary(multCompTukey3)
