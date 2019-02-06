@@ -58,6 +58,8 @@ str(scans)
 str(scans$n_prox_5m)
 summary(scans$n_prox_5m)
 
+histogram(scans$n_prox_5m)
+
 
 M0_n_prox_5m<-glmer(n_prox_5m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                   (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
@@ -65,7 +67,6 @@ M0_n_prox_5m<-glmer(n_prox_5m ~ n_encl + location_focal + time_meal + focal_sex 
 M1_n_prox_5m<-glmer(n_prox_5m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                     (1|focal_group), 
                   na.action=na.omit, data=scans, family = poisson)
-
 
 M0_n_prox_5m
 summary(M0_n_prox_5m)
