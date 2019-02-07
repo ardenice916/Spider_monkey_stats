@@ -61,6 +61,10 @@ summary(scans$nearest_m)
 
 histogram(scans$nearest_m)
 
+ggplot(scans, aes(x = nearest_m)) + geom_bar() + facet_wrap(location_focal ~ n_encl)
+
+#fit models
+
 M0_nearest_m<-glmer(nearest_m ~ n_encl + location_focal + time_meal + focal_sex + focal_age + month +
                   (1|focal_group/focal_id), na.action=na.omit, data=scans, family = poisson)
 

@@ -44,7 +44,10 @@ scans$time_meal<-factor(scans$time_meal, levels=c("none","before","after"))
 scans$observer_id<-factor(scans$observer_id, levels=c("916","1231"))
 scans$n_prox_5m<-as.numeric(scans$n_prox_5m)
 
-scans <- scans %>% filter(n_prox_5m!="NA")
+##############try filtering out sat 1 (only 2 adult monkeys... skewing results?)
+
+scans <- scans %>% filter(n_prox_5m!="NA") %>%
+  filter(focal_group!="sat1")
 
 #view and summarize
 
