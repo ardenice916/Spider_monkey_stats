@@ -83,6 +83,8 @@ histogram(scans$n_prox_1m)
 plot(scans$n_prox_1m)
 
 ggplot(scans, aes(x = n_prox_1m)) + geom_bar() + facet_wrap(location_focal ~ n_encl)
+ggplot(scans, aes(x = n_prox_1m)) + geom_bar() + facet_wrap(focal_group ~ time_meal)
+ggplot(scans, aes(x = n_prox_1m)) + geom_bar() + facet_wrap(focal_group ~ month)
 
 #try with glmmTMB
 
