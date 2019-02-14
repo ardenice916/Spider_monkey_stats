@@ -97,3 +97,17 @@ sum_overall_behavior<-sum_focals1 %>%
   mutate(prop_time=sum_dur/sum(sum_dur))
 View(sum_overall_behavior)
 
+#spatial analysis - preferences for Center enclosure
+
+sum_cp<-sum_focals1 %>%
+  dplyr::filter(actor_id==focal_id) %>%
+  dplyr::filter(n_encl==2) %>%
+  group_by(focal_id, focal_sex, focal_group, 
+           focal_age, time_meal, month, location) %>% 
+  complete(location, fill = list(duration_sec = 0)) %>%
+  summarize(sum_dur=sum(duration_sec)) %>%
+  mutate(prop_time=sum_dur/sum(sum_dur)) %>%
+  dplyr::filter(location=="center")
+
+View(sum_cp)
+sum_cp
