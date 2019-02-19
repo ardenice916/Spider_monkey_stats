@@ -67,8 +67,8 @@ str(sum_focals1)
 
 sum_focals<-sum_focals1 %>%
   dplyr::filter(actor_id==focal_id) %>%
-  dplyr::select(duration_sec, occurrences, month, focal_id, time_meal, n_encl, location, activity, focal_sex, focal_group, focal_age) %>%
-  group_by(focal_id, focal_sex, focal_group, focal_age, month, time_meal, n_encl, location, activity) %>%
+  dplyr::select(duration_sec, occurrences, month, focal_id, time_meal, pref_encl, n_encl, location, activity, focal_sex, focal_group, focal_age) %>%
+  group_by(focal_id, focal_sex, focal_group, focal_age, month, time_meal, n_encl, pref_encl, location, activity) %>%
   complete(activity, fill = list(duration_sec = 0)) %>%
   summarize(sum_dur=sum(duration_sec)) %>%
   mutate(prop_time=sum_dur/sum(sum_dur))

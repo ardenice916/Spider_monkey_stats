@@ -80,18 +80,18 @@ sum_focals$nest <- with(sum_focals, factor(paste(focal_group,focal_id)))
 sum_scratch<-sum_focals %>%
   filter(behavior=="sdb_scratching")
 
-M0_scratch<-gls(prop_time ~ n_encl + location + time_meal + focal_sex + focal_age, 
+M0_scratch<-gls(prop_time ~ n_encl + location + time_meal + focal_sex + focal_age + pref_encl, 
                       na.action=na.omit, data=sum_scratch, method="ML")
 
 #add random factor
 
-M1_scratch<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+M1_scratch<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age + pref_encl, 
                       random = ~1|focal_group, na.action=na.omit, data=sum_scratch, method="ML")
 
 
 #add nesting
 
-M2_scratch<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age, 
+M2_scratch<-lme(prop_time ~ n_encl + location + month + time_meal + focal_sex + focal_age + pref_encl, 
                       random = ~1|nest, na.action=na.omit, data=sum_scratch, method="ML")
 
 #anova
