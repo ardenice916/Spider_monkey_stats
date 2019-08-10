@@ -50,19 +50,51 @@ str(focals$focal_id)
 focals$dur_m <- focals$duration_sec/60
 focals$dur_h <- focals$dur_m/60
 
-sum(focals$duration_sec)
-sum(focals$dur_m)
-sum(focals$dur_h)
-#199.67 focal hours collected
-
 #create summarized table
 
 sum_focals1<-focals %>%
   dplyr::filter(actor_id!="FG") %>% 
   dplyr::filter(actor_id!="HUMAN")
-  
+
 sum_focals1$actor_id<-factor(sum_focals1$actor_id, levels=c("CL","DU","FY","MA","ME","PA","PE","PO","PP","RK","TR"))
-str(sum_focals1)  
+str(sum_focals1)
+
+sum(sum_focals1$duration_sec)
+sum(sum_focals1$dur_m)
+sum(sum_focals1$dur_h)
+#199.38 focal hours collected
+
+sum_month<-sum_focals1 %>%
+  group_by(month) %>%
+  summarize(sum_dur=sum(dur_h))
+View(sum_month)
+mean(sum_month$sum_dur)
+sd(sum_month$sum_dur)
+range(sum_month$sum_dur)
+
+sum_id<-sum_focals1 %>%
+  group_by(focal_id) %>%
+  summarize(sum_dur=sum(dur_h))
+View(sum_id)
+mean(sum_id$sum_dur)
+sd(sum_id$sum_dur)
+range(sum_id$sum_dur)
+
+sum_grp<-sum_focals1 %>%
+  group_by(focal_group) %>%
+  summarize(sum_dur=sum(dur_h))
+View(sum_grp)
+mean(sum_grp$sum_dur)
+sd(sum_grp$sum_dur)
+range(sum_grp$sum_dur)
+
+sum_sex<-sum_focals1 %>%
+  group_by(focal_sex) %>%
+  summarize(sum_dur=sum(dur_h))
+View(sum_sex)
+mean(sum_sex$sum_dur)
+sd(sum_sex$sum_dur)
+range(sum_sex$sum_dur)
 
 #spatial analysis - preferences for Center enclosure
 
@@ -87,6 +119,28 @@ plot(sum_cp$prop_time ~ sum_cp$focal_id)
 plot(sum_cp$prop_time ~ sum_cp$focal_age)
 plot(sum_cp$prop_time ~ sum_cp$focal_sex)
 plot(sum_cp$prop_time ~ sum_cp$month)
+plot(sum_cp$prop_time ~ sum_cp$time_meal)
+
+sum_cp1<-sum_focals1 %>%
+  dplyr::filter(actor_id==focal_id) %>%
+  dplyr::filter(n_encl=="2") %>%
+  group_by(focal_id, focal_sex, focal_group, 
+           focal_age) %>% 
+  complete(location, fill = list(duration_sec = 0)) %>%
+  summarize(sum_dur=sum(duration_sec)) %>%
+  mutate(prop_time=sum_dur/sum(sum_dur)) %>%
+  dplyr::filter(location=="center")
+
+View(sum_cp1)
+summary(sum_cp1$prop_time)
+
+histogram(sum_cp1$prop_time)
+
+plot(sum_cp1$prop_time)
+
+plot(sum_cp1$prop_time ~ sum_cp1$focal_id)
+plot(sum_cp1$prop_time ~ sum_cp1$focal_age)
+plot(sum_cp1$prop_time ~ sum_cp1$focal_sex)
 
 #4 monkeys preferred satellites across conditions; 7 preferred Center
 
